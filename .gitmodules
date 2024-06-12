@@ -10,3 +10,6 @@
 [submodule "foundry-fund-me/lib/foundry-devops"]
 	path = foundry-fund-me/lib/foundry-devops
 	url = https://github.com/Cyfrin/foundry-devops
+[submodule "html-fund-me-f23"]
+	path = html-fund-me-f23
+	url = https://github.com/Cyfrin/html-fund-me-f23.git
