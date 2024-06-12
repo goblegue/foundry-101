@@ -13,3 +13,6 @@
 [submodule "html-fund-me-f23"]
 	path = html-fund-me-f23
 	url = https://github.com/Cyfrin/html-fund-me-f23.git
+[submodule "foundry-lottery/lib/forge-std"]
+	path = foundry-lottery/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
