@@ -16,14 +16,15 @@ contract DeployRaffle is Script {
             address vrfCoordinator,
             bytes32 keyHash,
             uint256 subscriptionId,
-            uint32 callbackGasLimit
+            uint32 callbackGasLimit,
+            address linkAddress
         ) = helperConfig.activeNetworkConfig();
 
         if (subscriptionId == 0) {
             // we are going to create a subscription
             CreateSubscription createSubscription = new CreateSubscription();
             subscriptionId = createSubscription.createSubscription(vrfCoordinator);
-            helperConfig.activeNetworkConfig().subscriptionId = subscriptionId;
+            // helperConfig.activeNetworkConfig().subscriptionId = uint256(subscriptionId);
 
             //Fund the subscription
         }
