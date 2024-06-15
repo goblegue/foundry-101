@@ -19,3 +19,6 @@
 [submodule "foundry-lottery/lib/chainlink"]
 	path = foundry-lottery/lib/chainlink
 	url = https://github.com/smartcontractkit/chainlink
+[submodule "foundry-lottery/lib/solmate"]
+	path = foundry-lottery/lib/solmate
+	url = https://github.com/transmissions11/solmate
