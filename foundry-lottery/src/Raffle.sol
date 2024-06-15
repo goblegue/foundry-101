@@ -13,7 +13,7 @@ import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/autom
  * @notice  This contract is for creating a raffle
  */
 
-contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface{
+contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
     /**
      * Errors
      */
@@ -84,25 +84,26 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface{
         emit EnterRaffle(msg.sender);
     }
 
-    function checkUpkeep(bytes memory /*data*/) public view override returns (bool upkeepNeeded, bytes memory /*performData*/) {
-        bool timeHasPassed=(block.timestamp - s_lastTimeStamp) > i_interval;
-        bool isOpen=s_raffleState == RaffleState.OPEN;
-        bool hasPlayers=s_players.length > 0;
-        bool hasBalance=address(this).balance > 0;
+    function checkUpkeep(bytes memory /*data*/ )
+        public
+        view
+        override
+        returns (bool upkeepNeeded, bytes memory /*performData*/ )
+    {
+        bool timeHasPassed = (block.timestamp - s_lastTimeStamp) > i_interval;
+        bool isOpen = s_raffleState == RaffleState.OPEN;
+        bool hasPlayers = s_players.length > 0;
+        bool hasBalance = address(this).balance > 0;
 
         upkeepNeeded = timeHasPassed && isOpen && hasPlayers && hasBalance;
 
-        return (upkeepNeeded, "0x0");  
+        return (upkeepNeeded, "0x0");
     }
 
-    function performUpkeep(bytes calldata /*performData*/) external override{
-        (bool upkeepNeeded, ) = checkUpkeep("");
+    function performUpkeep(bytes calldata /*performData*/ ) external override {
+        (bool upkeepNeeded,) = checkUpkeep("");
         if (!upkeepNeeded) {
-            revert Raffle__UpkeepNotNeeded(
-                address(this).balance,
-                s_players.length,
-                s_raffleState
-            );
+            revert Raffle__UpkeepNotNeeded(address(this).balance, s_players.length, s_raffleState);
         }
 
         s_raffleState = RaffleState.CALCULATING;
@@ -119,7 +120,7 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface{
         );
     }
 
-    function fulfillRandomWords(uint256 /*requestId*/, uint256[] calldata randomWords) internal override {
+    function fulfillRandomWords(uint256, /*requestId*/ uint256[] calldata randomWords) internal override {
         // Use the random number to pick a winner
         uint256 winnerIndex = randomWords[0] % s_players.length;
         address payable winner = s_players[winnerIndex];
@@ -140,5 +141,13 @@ contract Raffle is VRFConsumerBaseV2Plus, AutomationCompatibleInterface{
 
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
+    }
+
+    function getRaffleState() public view returns (RaffleState) {
+        return s_raffleState;
+    }
+
+    function getPlayers(uint256 indexOfPlayer) public view returns (address) {
+        return s_players[indexOfPlayer];
     }
 }
