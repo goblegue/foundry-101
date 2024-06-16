@@ -12,3 +12,9 @@ docs/
 
 # Dotenv file
 .env
+
+# Trace files
+trace.log
+
+# Coverage file
+coverage.txt
