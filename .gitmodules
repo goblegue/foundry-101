@@ -22,3 +22,6 @@
 [submodule "foundry-lottery/lib/solmate"]
 	path = foundry-lottery/lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "foundry-lottery/lib/foundry-devops"]
+	path = foundry-lottery/lib/foundry-devops
+	url = https://github.com/Cyfrin/foundry-devops
