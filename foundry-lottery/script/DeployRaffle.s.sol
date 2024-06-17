@@ -32,7 +32,7 @@ contract DeployRaffle is Script {
             fundSubscription.fundSubscription(vrfCoordinator, subscriptionId, linkAddress,deployerKey);
         }
 
-        vm.startBroadcast();
+        vm.startBroadcast(deployerKey);
         Raffle raffle = new Raffle(entranceFee, interval, vrfCoordinator, keyHash, subscriptionId, callbackGasLimit);
         vm.stopBroadcast();
 
