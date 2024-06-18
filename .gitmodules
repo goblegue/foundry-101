@@ -28,3 +28,6 @@
 [submodule "meta/lib/forge-std"]
 	path = meta/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "meta/lib/openzeppelin-contracts"]
+	path = meta/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
