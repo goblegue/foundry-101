@@ -4,13 +4,12 @@ pragma solidity ^0.8.18;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract BasicNFT is ERC721{
+contract BasicNFT is ERC721 {
+    uint256 private S_tokenCounter;
 
-    uint256  private S_tokenCounter;
+    mapping(uint256 => string) private s_tokenIdToURIs;
 
-    mapping(uint256 => string) private s_tokenIdToURIs; 
-
-    constructor() ERC721("Dogie", "DOG") {
+    constructor() ERC721("Snoopie", "SNP") {
         S_tokenCounter = 0;
     }
 
@@ -25,7 +24,7 @@ contract BasicNFT is ERC721{
         return s_tokenIdToURIs[tokenId];
     }
 
-    function getTokenCounter() external view returns(uint256){
+    function getTokenCounter() external view returns (uint256) {
         return S_tokenCounter;
     }
 }

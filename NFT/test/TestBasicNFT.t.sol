@@ -7,7 +7,6 @@ import {BasicNFT} from "../src/BasicNFT.sol";
 import {DeployBasicNFT} from "../script/DeployBasicNFT.s.sol";
 
 contract TestBasicNFT is Test {
-
     uint256 constant STARTING_BALANCE = 1000 ether;
 
     BasicNFT basicNFT;
@@ -22,14 +21,14 @@ contract TestBasicNFT is Test {
     }
 
     function testDeployment() public {
-        assertEq(basicNFT.name(), "Dogie");
-        assertEq(basicNFT.symbol(), "DOG");
+        assertEq(basicNFT.name(), "Snoopie");
+        assertEq(basicNFT.symbol(), "SNP");
     }
 
     function testMintNFT() public {
         vm.prank(alice);
         basicNFT.mintNFT("tokenURI_1");
-        
+
         assertEq(basicNFT.ownerOf(0), alice);
         assertEq(basicNFT.tokenURI(0), "tokenURI_1");
         assertEq(basicNFT.getTokenCounter(), 1);
