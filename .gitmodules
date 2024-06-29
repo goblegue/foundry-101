@@ -40,3 +40,12 @@
 [submodule "NFT/lib/foundry-devops"]
 	path = NFT/lib/foundry-devops
 	url = https://github.com/Cyfrin/foundry-devops
+[submodule "usd-stable_coin/lib/forge-std"]
+	path = usd-stable_coin/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "usd-stable_coin/lib/openzeppelin-contracts"]
+	path = usd-stable_coin/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "usd-stable_coin/lib/chainlink"]
+	path = usd-stable_coin/lib/chainlink
+	url = https://github.com/smartcontractkit/chainlink
