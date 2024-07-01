@@ -2,29 +2,28 @@
 
 pragma solidity ^0.8.18;
 
-import{Test} from "forge-std/Test.sol";
+import {Test} from "forge-std/Test.sol";
 import {Stablecoin} from "../../src/Stablecoin.sol";
 import {SCEngine} from "../../src/SCEngine.sol";
 import {DeploySC} from "../../script/DeploySC.s.sol";
 import {ERC20Mock} from "../mocks/ERC20Mock.sol";
 import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-contract SCEngineTest is Test{
+
+contract SCEngineTest is Test {
     DeploySC deploySC;
     Stablecoin sc;
     SCEngine scEngine;
     HelperConfig hc;
-    address address_weth; 
+    address address_weth;
     ERC20Mock weth;
-
-
 
     address public user = makeAddr("user");
 
     function setUp() public {
         deploySC = new DeploySC();
-        (sc, scEngine,hc) = deploySC.run();
-        (,,address_weth,,)= hc.activeConfig();
+        (sc, scEngine, hc) = deploySC.run();
+        (,, address_weth,,) = hc.activeConfig();
 
         weth = ERC20Mock(address_weth);
         // Mint tokens to user
@@ -41,7 +40,7 @@ contract SCEngineTest is Test{
 
     function testIsTokenAllowedModifier() public {
         vm.startPrank(user);
-        ERC20Mock notAllowedToken = new ERC20Mock("Not Allowed Token", "NAT",user, 18);
+        ERC20Mock notAllowedToken = new ERC20Mock("Not Allowed Token", "NAT", user, 18);
         vm.expectRevert(SCEngine.SCEngine__TokenNotAllowed.selector);
         scEngine.depositCollateral(1e18, address(notAllowedToken));
         vm.stopPrank();
@@ -60,7 +59,7 @@ contract SCEngineTest is Test{
         vm.startPrank(user);
         weth.approve(address(scEngine), 500e18);
         scEngine.depositCollateral(500e18, address(weth));
-        
+
         uint256 amountToMint = 100e18;
         scEngine.mintSC(amountToMint);
 
@@ -73,9 +72,11 @@ contract SCEngineTest is Test{
         vm.startPrank(user);
         weth.approve(address(scEngine), 500e18);
         scEngine.depositCollateral(500e18, address(weth));
-        
+
         uint256 amountToMint = 1000e18; // This should cause a revert due to low health factor
-        vm.expectRevert(abi.encodeWithSelector(SCEngine.SCEngine__BreaksHealthFactor.selector, scEngine.healthFactor(user)));
+        vm.expectRevert(
+            abi.encodeWithSelector(SCEngine.SCEngine__BreaksHealthFactor.selector, scEngine.healthFactor(user))
+        );
         scEngine.mintSC(amountToMint);
         vm.stopPrank();
     }
