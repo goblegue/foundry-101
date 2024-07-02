@@ -12,13 +12,14 @@ contract SCEngine is ReentrancyGuard {
 
     error SCEngine__NeedsMoreThanZero();
     error SCEngine__TokenNotAllowed();
-    error SCEngine__TokenAddressesAndPriceFeedAddressesAmountsDontMatch();
+    error SCEngine__TokenAddressesAndPriceFeedAddressesLengthsDontMatch();
     error SCEngine__TransferFailed();
     error SCEngine__BreaksHealthFactor(uint256 healthFactor);
     error SCEngine__MintFailed();
     error SCEngine__AmountShouldBeLessThanCollateral();
     error SCEngine__BurnAmountExceedsSCMinted();
     error SCEngine__HealthFactorOk();
+    error SCEngine__HealthFactorNotImproved();
     // State variables
 
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10;
@@ -37,9 +38,7 @@ contract SCEngine is ReentrancyGuard {
 
     // Events
     event CollateralDeposited(address indexed user, address indexed collateralToken, uint256 indexed amount);
-    event CollateralRedeemed(
-        address indexed from, address indexed to, address indexed collateralToken, uint256 indexed amount
-    );
+    event CollateralRedeemed(address indexed from, address indexed to, address indexed collateralToken, uint256 amount);
 
     // modifiers
 
@@ -60,7 +59,7 @@ contract SCEngine is ReentrancyGuard {
     // Constructor
     constructor(address[] memory tokenAddresses, address[] memory priceFeedAddresses, address _stablecoin) {
         if (tokenAddresses.length != priceFeedAddresses.length) {
-            revert SCEngine__TokenAddressesAndPriceFeedAddressesAmountsDontMatch();
+            revert SCEngine__TokenAddressesAndPriceFeedAddressesLengthsDontMatch();
         }
 
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
@@ -107,14 +106,14 @@ contract SCEngine is ReentrancyGuard {
         uint256 tokenAmountFromDebt = getTokenAmountFromUSD(collateral, debtToCovered);
         uint256 bonusCollateral = tokenAmountFromDebt * LIQUIDATION_BONUS / LIQUIDATION_PRECESION;
         uint256 totalCollateral = tokenAmountFromDebt + bonusCollateral;
-        _reedeemCollateral(collateral, totalCollateral, user, msg.sender);
+        _redeemCollateral(collateral, totalCollateral, user, msg.sender);
         _burnSC(debtToCovered, user, msg.sender);
-        uint256 endingUserHealthFactor = _healthFactor(user);
+        uint256 endingHealthFactor = healthFactor(user);
         // This conditional should never hit, but just in case
-        if (endingUserHealthFactor <= startingUserHealthFactor) {
-            revert DSCEngine__HealthFactorNotImproved();
+        if (endingHealthFactor <= startingHealthFactor) {
+            revert SCEngine__HealthFactorNotImproved();
         }
-        revertIfHealthFactorIsBroken(msg.sender);
+        _revertIfHealthFactorBelowThreshold(msg.sender);
     }
 
     // Public functions
@@ -159,13 +158,13 @@ contract SCEngine is ReentrancyGuard {
 
     // Internal functions
 
-    function _burnSC(uint256 amount, address onBehalfOf, adddress dscfrom) internal {
+    function _burnSC(uint256 amount, address onBehalfOf, address dscFrom) internal {
         uint256 userSCMinted = s_SCMinted[onBehalfOf];
         if (amount > userSCMinted) {
             revert SCEngine__BurnAmountExceedsSCMinted();
         }
         s_SCMinted[onBehalfOf] -= amount;
-        bool success = IERC20(collateralToken).transferFrom(dscFrom, address(this), amount);
+        bool success = i_sc.transferFrom(dscFrom, address(this), amount);
         if (!success) {
             revert SCEngine__TransferFailed();
         }
@@ -174,7 +173,7 @@ contract SCEngine is ReentrancyGuard {
 
     function _revertIfHealthFactorBelowThreshold(address user) internal view {
         uint256 _healthFactor = healthFactor(user);
-        if (_healthFactor < MIN_HEALTH_FACTOR) {
+        if (_healthFactor <= MIN_HEALTH_FACTOR) {
             revert SCEngine__BreaksHealthFactor(_healthFactor);
         }
     }
@@ -209,6 +208,8 @@ contract SCEngine is ReentrancyGuard {
 
     function healthFactor(address user) public view returns (uint256) {
         (uint256 totalSCMinted, uint256 totalCollateralValueInUsd) = _getAccountInfo(user);
+
+        if (totalSCMinted == 0) return type(uint256).max;
         uint256 collateralAdjustedForThreshold =
             totalCollateralValueInUsd * LIQUIDATION_THRESHOLD / LIQUIDATION_PRECESION;
         return collateralAdjustedForThreshold * PRECESION / totalSCMinted;
@@ -230,5 +231,4 @@ contract SCEngine is ReentrancyGuard {
     function getAccountInfo(address user) external view returns (uint256 totalSCMinted, uint256 totalCollateralValue) {
         return _getAccountInfo(user);
     }
-    
 }
