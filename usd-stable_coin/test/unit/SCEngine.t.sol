@@ -127,7 +127,7 @@ import { Test, console } from "forge-std/Test.sol";
 import { StdCheats } from "forge-std/StdCheats.sol";
 
 contract SCEngineTest is StdCheats, Test {
-    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address token, uint256 amount); // if
+    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address indexed token, uint256 amount); // if
         // redeemFrom != redeemedTo, then it was liquidated
 
     SCEngine public dsce;
@@ -249,7 +249,7 @@ contract SCEngineTest is StdCheats, Test {
     function testRevertsWithUnapprovedCollateral() public {
         ERC20Mock randToken = new ERC20Mock("RAN", "RAN", user, 100e18);
         vm.startPrank(user);
-        vm.expectRevert(abi.encodeWithSelector(SCEngine.SCEngine__TokenNotAllowed.selector, address(randToken)));
+        vm.expectRevert(abi.encodeWithSelector(SCEngine.SCEngine__TokenNotAllowed.selector));
         dsce.depositCollateral(address(randToken), amountCollateral);
         vm.stopPrank();
     }
@@ -483,7 +483,7 @@ contract SCEngineTest is StdCheats, Test {
         MockV3Aggregator(ethUSDPriceFeed).updateAnswer(ethUSDUpdatedPrice);
 
         uint256 userHealthFactor = dsce.getHealthFactor(user);
-        // 180*50 (LIQUIDATION_THRESHOLD) / 100 (LIQUIDATION_PRECISION) / 100 (PRECISION) = 90 / 100 (totalSCMinted) =
+        // 180*20 (LIQUIDATION_THRESHOLD) / 100 (LIQUIDATION_PRECISION) / 100 (PRECISION) = 36 / 100 (totalSCMinted) =
         // 0.9
         assert(userHealthFactor == 0.9 ether);
     }

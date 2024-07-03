@@ -22,7 +22,7 @@ contract DeploySC is Script {
 
         vm.startBroadcast(deployerKey);
         Stablecoin sc = new Stablecoin(vm.addr(deployerKey));
-        SCEngine scEngine = new SCEngine(tokenAddresses, priceFeedAddresses, address(0));
+        SCEngine scEngine = new SCEngine(tokenAddresses, priceFeedAddresses, address(sc));
         sc.transferOwnership(address(scEngine));
         vm.stopBroadcast();
 
