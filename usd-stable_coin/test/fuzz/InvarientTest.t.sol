@@ -21,14 +21,13 @@ contract InvariantTest is StdInvariant, Test {
     address wbtc;
 
     Handler handler;
-    
 
     function setUp() external {
         deploySC = new DeploySC();
         (stablecoin, scEngine, helperConfig) = deploySC.run();
         (,, weth, wbtc,) = helperConfig.activeConfig();
 
-        handler= new Handler(stablecoin, scEngine);
+        handler = new Handler(stablecoin, scEngine);
 
         targetContract(address(handler));
     }

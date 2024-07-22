@@ -49,3 +49,6 @@
 [submodule "usd-stable_coin/lib/chainlink"]
 	path = usd-stable_coin/lib/chainlink
 	url = https://github.com/smartcontractkit/chainlink
+[submodule "foundry=upgradable/lib/forge-std"]
+	path = foundry=upgradable/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

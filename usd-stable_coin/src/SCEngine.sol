@@ -6,6 +6,7 @@ import {Stablecoin} from "./Stablecoin.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+import {OracleLib} from "./libraries/OracleLib.sol";
 
 contract SCEngine is ReentrancyGuard {
     //errors
@@ -20,6 +21,10 @@ contract SCEngine is ReentrancyGuard {
     error SCEngine__BurnAmountExceedsSCMinted();
     error SCEngine__HealthFactorOk();
     error SCEngine__HealthFactorNotImproved();
+
+    // Type declarations
+    using OracleLib for AggregatorV3Interface;
+
     // State variables
 
     uint256 private constant ADDITIONAL_FEED_PRECISION = 1e10;
@@ -182,8 +187,6 @@ contract SCEngine is ReentrancyGuard {
     }
 
     function _redeemCollateral(address collateralToken, uint256 amount, address from, address to) internal {
-
-
         s_userCollateralAmounts[from][collateralToken] -= amount;
         emit CollateralRedeemed(from, to, collateralToken, amount);
         bool success = IERC20(collateralToken).transfer(to, amount);
@@ -221,7 +224,7 @@ contract SCEngine is ReentrancyGuard {
 
     function getUSDValue(address token, uint256 amount) public view returns (uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_pricefeeds[token]);
-        (, int256 price,,,) = priceFeed.latestRoundData();
+        (, int256 price,,,) = priceFeed.staleCheckLatestRoundData();
         // 1 ETH = 1000 USD
         // The returned value from Chainlink will be 1000 * 1e8
         // Most USD pairs have 8 decimals, so we will just pretend they all do
