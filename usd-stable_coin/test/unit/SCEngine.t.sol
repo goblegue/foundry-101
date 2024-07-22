@@ -1,4 +1,3 @@
-
 // pragma solidity ^0.8.18;
 
 // import {Test} from "forge-std/Test.sol";
@@ -54,8 +53,6 @@
 //         new SCEngine(tokenAddresses, feedAddresses, address(dsc));
 //     }
 
-
-
 //     //////////////////
 //     // Price Tests  //
 //     //////////////////
@@ -96,7 +93,6 @@
 //     vm.stopPrank();
 // }
 
-
 //     function testCanDepositedCollateralAndGetAccountInfo() public depositedCollateral {
 //         (uint256 totalSCMinted, uint256 collateralValueInUSD) = dsce.getAccountInfo(user);
 //         uint256 expectedDepositedAmount = dsce.getTokenAmountFromUSD(weth, collateralValueInUSD);
@@ -104,30 +100,30 @@
 //         assertEq(expectedDepositedAmount, amountCollateral);
 //     }
 
-    
 // }
-
 
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.19;
 
-import { DeploySC } from "../../script/DeploySC.s.sol";
-import { SCEngine } from "../../src/SCEngine.sol";
-import { Stablecoin } from "../../src/Stablecoin.sol";
-import { HelperConfig } from "../../script/HelperConfig.s.sol";
+import {DeploySC} from "../../script/DeploySC.s.sol";
+import {SCEngine} from "../../src/SCEngine.sol";
+import {Stablecoin} from "../../src/Stablecoin.sol";
+import {HelperConfig} from "../../script/HelperConfig.s.sol";
 // import { ERC20Mock } from "@openzeppelin/contracts/mocks/ERC20Mock.sol"; Updated mock location
-import { ERC20Mock } from "../mocks/ERC20Mock.sol";
-import { MockV3Aggregator } from "../mocks/MockV3Aggregator.sol";
-import { MockMoreDebtDSC } from "../mocks/MockMoreDebtDSC.sol";
-import { MockFailedMintDSC } from "../mocks/MockFailedMintDSC.sol";
-import { MockFailedTransferFrom } from "../mocks/MockFailedTransferFrom.sol";
-import { MockFailedTransfer } from "../mocks/MockFailedTransfer.sol";
-import { Test, console } from "forge-std/Test.sol";
-import { StdCheats } from "forge-std/StdCheats.sol";
+import {ERC20Mock} from "../mocks/ERC20Mock.sol";
+import {MockV3Aggregator} from "../mocks/MockV3Aggregator.sol";
+import {MockMoreDebtDSC} from "../mocks/MockMoreDebtDSC.sol";
+import {MockFailedMintDSC} from "../mocks/MockFailedMintDSC.sol";
+import {MockFailedTransferFrom} from "../mocks/MockFailedTransferFrom.sol";
+import {MockFailedTransfer} from "../mocks/MockFailedTransfer.sol";
+import {Test, console} from "forge-std/Test.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
 contract SCEngineTest is StdCheats, Test {
-    event CollateralRedeemed(address indexed redeemFrom, address indexed redeemTo, address indexed token, uint256 amount); // if
+    event CollateralRedeemed(
+        address indexed redeemFrom, address indexed redeemTo, address indexed token, uint256 amount
+    ); // if
         // redeemFrom != redeemedTo, then it was liquidated
 
     SCEngine public dsce;
