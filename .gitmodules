@@ -67,3 +67,9 @@
 [submodule "foundry-upgradable/lib/foundry-devops"]
 	path = foundry-upgradable/lib/foundry-devops
 	url = https://github.com/Cyfrin/foundry-devops
+[submodule "Merkel-Airdrops/lib/forge-std"]
+	path = Merkel-Airdrops/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "Merkel-Airdrops/lib/openzeppelin-contracts"]
+	path = Merkel-Airdrops/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
