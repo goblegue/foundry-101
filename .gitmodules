@@ -76,3 +76,6 @@
 [submodule "Merkel-Airdrops/lib/murky"]
 	path = Merkel-Airdrops/lib/murky
 	url = https://github.com/dmfxyz/murky
+[submodule "Merkel-Airdrops/lib/foundry-devops"]
+	path = Merkel-Airdrops/lib/foundry-devops
+	url = https://github.com/cyfrin/foundry-devops
