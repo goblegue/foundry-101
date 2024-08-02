@@ -18,7 +18,7 @@ contract DeployMerkleAirdrop is Script {
         token.mint(token.owner(), AMOUNT_TO_TRANSFER);
         token.transfer(address(airdrop), AMOUNT_TO_TRANSFER);
         token.transferOwnership(address(airdrop));
-        vm.stopBroadcast(); 
+        vm.stopBroadcast();
         return (airdrop, token);
     }
 

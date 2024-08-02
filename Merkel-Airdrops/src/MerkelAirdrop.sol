@@ -13,7 +13,7 @@ contract MerkelAirdrop is EIP712 {
     error MerkelAirdrop__AlreadyClaimed();
     error MerkelAirdrop__InvalidSignature();
 
-    address[] claimers;
+   
 
     bytes32 private immutable i_merkelRoot;
     IERC20 private immutable i_token;
